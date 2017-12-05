@@ -97,7 +97,19 @@ public class LoginActivity extends AppCompatActivity {
 
     // TODO (7): Create a private void signIn(String email, String password) method
     // TODO (7): that checks for valid input, then uses Firebase authentication to sign in user with email and password entered.
-
+    private void signIn(String email, String password) {
+        if(!isValidInput()) return;
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful())
+                        goToTreasure();
+                        else
+                            Toast.makeText(LoginActivity.this, "Email or password was incorrect", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 
     // TODO (8): Create a public void handleLoginButtons(View v) that checks the id of the button clicked.
     // TODO (8): If the button is createAccountButton, call the createAccount() method, else if it's signInButton, call the signIn() method.
@@ -107,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                 createAccount(mEmailEditText.getText().toString(), mPasswordEditText.getText().toString());
                 break;
             case R.id.signInButton:
-//                signIn(mEmailEditText.getText().toString(), mPasswordEditText.getText().toString());
+                signIn(mEmailEditText.getText().toString(), mPasswordEditText.getText().toString());
                 break;
 
         }
