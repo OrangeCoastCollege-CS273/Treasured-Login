@@ -88,7 +88,9 @@ public class LoginActivity extends AppCompatActivity {
                             mUser = mAuth.getCurrentUser();
                             mUser.sendEmailVerification();
                         } else {
-                            Toast.makeText(LoginActivity.this, "An account with that email already exists. Please sign in, or use a different email.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this,
+                                    "An account with that email already exists. Please sign in, or use a different email.",
+                                    Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -98,15 +100,22 @@ public class LoginActivity extends AppCompatActivity {
     // TODO (7): Create a private void signIn(String email, String password) method
     // TODO (7): that checks for valid input, then uses Firebase authentication to sign in user with email and password entered.
     private void signIn(String email, String password) {
-        if(!isValidInput()) return;
+        if (!isValidInput()) return;
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful())
-                        goToTreasure();
-                        else
-                            Toast.makeText(LoginActivity.this, "Email or password was incorrect", Toast.LENGTH_SHORT).show();
+                        if (task.isSuccessful()) {
+                            mUser = mAuth.getCurrentUser();
+                            if (mUser.isEmailVerified())
+                                goToTreasure();
+                            else
+                                Toast.makeText(LoginActivity.this,
+                                        "Please check " + mUser.getEmail() + " for a verification email",
+                                        Toast.LENGTH_LONG).show();
+                        } else
+                            Toast.makeText(LoginActivity.this, "Email or password was incorrect",
+                                    Toast.LENGTH_SHORT).show();
                     }
                 });
     }
